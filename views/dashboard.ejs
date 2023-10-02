@@ -1,0 +1,20 @@
+<%- include('partials/header'); -%>
+
+   <h1>This is the dashboard</h1>
+   <a>This is where you can see your connected bots</a>
+   <% bots.forEach(bot=> { %>
+      <div>
+         <a href="bots/<%= bot.clientID %>">
+            <p>
+               <%= bot.clientID %>
+            </p>
+            <p>
+               <%= bot.name %>
+            </p>
+         </a>
+      </div>
+      <br>
+      <% }); %>
+         <a href="/newbot">Create a new bot here</a>
+
+         <%- include('partials/footer'); -%>

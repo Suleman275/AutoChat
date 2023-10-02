@@ -1,0 +1,51 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<%- include('partials/header'); -%>
+
+   <div class="container">
+      <form action="/newbot" method="">
+         <label for="name">Give your bot a name</label> <br>
+         <input type="text" name="name" id="name"> <br>
+         <button>Create!</button>
+      </form>
+      <br>
+      <div id="qr-code"></div>
+   </div>
+
+   <%- include('partials/footer'); -%>
+      <script>
+         function generateQrCode(qrContent) {
+            return new QRCode("qr-code", {
+               text: qrContent,
+               width: 256,
+               height: 256,
+               colorDark: "#000000",
+               colorLight: "#ffffff",
+               correctLevel: QRCode.CorrectLevel.H,
+            });
+         }
+
+         const form = document.querySelector('form');
+         const resbox = document.querySelector('resbox')
+         const codebox = document.getElementById('qr-code')
+
+         form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            codebox.innerHTML = ""
+            const name = form.name.value
+
+            try {
+               const res = await fetch('/newbot', {
+                  method: 'POST',
+                  body: JSON.stringify({ name }),
+                  headers: { 'Content-Type': 'application/json' }
+               })
+               const data = await res.json();
+               console.log(data);
+
+               generateQrCode(data.code)
+            } catch (error) {
+               console.log(error)
+            }
+         })
+      </script>

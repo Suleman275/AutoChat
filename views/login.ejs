@@ -1,0 +1,73 @@
+<%- include('partials/header'); -%>
+
+   <section class="container forms">
+      <div class="form login">
+         <div class="form-content">
+            <header>Login</header>
+            <form action="#">
+               <div class="field input-field">
+                  <input type="email" name="email" placeholder="Email" class="input">
+               </div>
+               <div class="email-error"></div>
+
+               <div class="field input-field">
+                  <input type="password" name="password" placeholder="Password" class="password">
+                  <i class='bx bx-hide eye-icon'></i>
+               </div>
+               <div class="pass-error"></div>
+
+               <div class="form-link">
+                  <a href="#" class="forgot-pass">Forgot password?</a>
+               </div>
+
+               <div class="field button-field">
+                  <button>Login</button>
+               </div>
+            </form>
+
+            <div class="form-link">
+               <span>Don't have an account? <a href="signup" class="link signup-link">Signup</a></span>
+            </div>
+         </div>
+      </div>
+   </section>
+
+   <%- include('partials/footer'); -%>
+
+      <script>
+         const form = document.querySelector('form');
+         const emailError = document.querySelector('.email-error');
+         const passwordError = document.querySelector('.pass-error');
+
+         form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // reset errors
+            emailError.textContent = '';
+            passwordError.textContent = '';
+
+            // get values
+            const email = form.email.value;
+            const password = form.password.value;
+
+            try {
+               const res = await fetch('/login', {
+                  method: 'POST',
+                  body: JSON.stringify({ email, password }),
+                  headers: { 'Content-Type': 'application/json' }
+               });
+               const data = await res.json();
+               console.log(data);
+               if (data.errors) {
+                  emailError.textContent = data.errors.email;
+                  passwordError.textContent = data.errors.password;
+               }
+               if (data.user) {
+                  location.assign('/dashboard');
+               }
+            }
+            catch (err) {
+               console.log(err);
+            }
+         });
+      </script>
